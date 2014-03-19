@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "sqlite3": "~2.2",
-    "mysql": "~2.1"
+    "mysql": "~2.1",
+    "pg": "~2.11"
   }
 }

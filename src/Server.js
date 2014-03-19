@@ -5,6 +5,11 @@ function Server(hostname, username, password, options) {
     this.options = options;
 }
 
+Server.factory = function (type, hostname, username, password, options) {
+    var ServerObject = require('./Server/' + type);
+    return new ServerObject(hostname, username, password, options);
+};
+
 Server.prototype.connect = function() {
     throw 'You must override connect() in your Server object.';
 };

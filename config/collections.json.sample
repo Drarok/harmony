@@ -1,0 +1,22 @@
+{
+    "support": {
+        "servers": {
+            "mysql": {
+                "type": "MySQL",
+                "hostname": "127.0.0.1",
+                "username": "root",
+                "password": "",
+                "options": {
+                    "database": "test"
+                }
+            },
+            "sqlite": {
+                "type": "SQLite",
+                "hostname": "/tmp/harmony.sqlite3"
+            }
+        },
+        "objects": {
+            "customers": ["mysql", "sqlite"]
+        }
+    }
+}

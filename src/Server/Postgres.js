@@ -34,7 +34,7 @@ Postgres.prototype.getTable = function (name, query, callback) {
         var self = this;
         this.connect(function (err) {
             if (err) {
-                this.onError(err);
+                self.onError(err);
                 return;
             }
 

@@ -6,18 +6,41 @@ function Postgres() {
 
 Postgres.prototype = new Server();
 
-Postgres.prototype.connect = function() {
+Postgres.prototype.connect = function(callback) {
     var pg = require('pg');
 
-    var conString = 'postgres://' + this.username + ':' + this.password;
-    conString += '@' + this.hostname + '/' + this.options.database;
+    var conString = 'postgres://';
+
+    if (this.username) {
+        conString += this.username;
+    }
+
+    if (this.password) {
+        conString += ':' + this.password;
+    }
+
+    if (this.username || this.password) {
+        conString += '@';
+    }
+
+    conString += this.hostname + '/' + this.options.database;
 
     this.connection = new pg.Client(conString);
+    this.connection.connect(callback);
 };
 
 Postgres.prototype.getTable = function (name, query, callback) {
     if (! this.connection) {
-        this.connect();
+        var self = this;
+        this.connect(function (err) {
+            if (err) {
+                this.onError(err);
+                return;
+            }
+
+            self.getTable(name, query, callback);
+        });
+        return;
     }
 
     var sql = 'SELECT * FROM customers';

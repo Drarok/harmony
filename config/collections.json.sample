@@ -13,10 +13,19 @@
             "sqlite": {
                 "type": "SQLite",
                 "hostname": "/tmp/harmony.sqlite3"
+            },
+            "postgres": {
+                "type": "Postgres",
+                "hostname": "127.0.0.1",
+                "username": "root",
+                "password": "",
+                "options": {
+                    "database": "test"
+                }
             }
         },
         "objects": {
-            "customers": ["mysql", "sqlite"]
+            "customers": ["mysql", "sqlite", "postgres"]
         }
     }
 }

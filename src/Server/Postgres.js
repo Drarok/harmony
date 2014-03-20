@@ -30,8 +30,9 @@ Postgres.prototype.connect = function(callback) {
 };
 
 Postgres.prototype.getTable = function (name, query, callback) {
+    var self = this;
+
     if (! this.connection) {
-        var self = this;
         this.connect(function (err) {
             if (err) {
                 self.onError(err);
@@ -46,7 +47,7 @@ Postgres.prototype.getTable = function (name, query, callback) {
     var sql = 'SELECT * FROM customers';
     this.connection.query(sql, function (err, result) {
         if (err) {
-            this.onError(err);
+            self.onError(err);
             return;
         }
 

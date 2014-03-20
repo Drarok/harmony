@@ -6,28 +6,41 @@ function MySQL() {
 
 MySQL.prototype = new Server();
 
-MySQL.prototype.connect = function() {
-    this.connection = require('mysql').createConnection({
+MySQL.prototype.connect = function(callback) {
+    var config = {
         host: this.hostname,
         user: this.username,
         password: this.password,
         database: this.options.database
-    });
+    };
+
+    this.connection = require('mysql').createConnection(config);
+    this.connection.connect(callback);
 };
 
 MySQL.prototype.getTable = function (name, query, callback) {
+    var self = this;
+
     if (! this.connection) {
-        this.connect();
+        this.connect(function (err) {
+            if (err) {
+                self.onError(err);
+                return;
+            }
+
+            self.getTable(name, query, callback);
+        });
+        return;
     }
 
     var sql = 'SELECT * FROM customers';
-    this.connection.query(sql, function (err, rows, fields) {
+    this.connection.query(sql, function (err, rows) {
         if (err) {
-            this.onError(err);
+            self.onError(err);
             return;
         }
 
-        callback(rows, fields);
+        callback(rows);
     });
 };
 

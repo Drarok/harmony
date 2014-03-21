@@ -1,6 +1,7 @@
 {
   "name": "harmony",
   "version": "0.1.0",
+  "repository": "git://drarok.com/harmony.git",
   "description": "A SQL brokering server, written in Node.js.",
   "main": "harmony.js",
   "scripts": {

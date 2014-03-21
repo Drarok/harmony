@@ -32,6 +32,8 @@ MSSQL.prototype._getTable = function (name, query, callback) {
         sql += 'WHERE ' + where.join(' AND ');
     }
 
+    console.log(sql);
+
     var request = this.connection.request();
     request.query(sql, function (err, recordset) {
         if (err) {

@@ -25,6 +25,8 @@ SQLite.prototype._getTable = function (name, query, callback) {
         sql += 'WHERE ' + where.join(' AND ');
     }
 
+    console.log(sql);
+
     this.connection.all(sql, function (err, rows) {
         if (err) {
             self.onError(err);

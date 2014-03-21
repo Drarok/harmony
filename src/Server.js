@@ -46,7 +46,7 @@ Server.prototype.parseQuery = function (query) {
         var value = query[column];
         var clause = this.escapeIdentifier(column);
         if (value.indexOf('*') === -1) {
-            clause = ' = ';
+            clause += ' = ';
             clause += this.escapeValue(value);
         } else {
             clause += ' LIKE ';

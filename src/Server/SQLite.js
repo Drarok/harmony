@@ -22,7 +22,7 @@ SQLite.prototype._getTable = function (name, query, callback) {
 
     var where = this.parseQuery(query);
     if (where.length) {
-        sql += 'WHERE ' + where.join(' AND ');
+        sql += ' WHERE ' + where.join(' AND ');
     }
 
     console.log(sql);

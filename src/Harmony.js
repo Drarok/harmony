@@ -30,14 +30,16 @@ Harmony.prototype.dispatch = function (res, collection, object, query) {
 
     var results = [];
 
-    var callback = function (name, rows) {
-        for (var i in rows) {
-            var row = {_server: name};
-            for (var k in rows[i]) {
-                row[k] = rows[i][k];
-            }
-            results.push(row);
+    var callback = function (name, err, rows) {
+        var result = {server: name};
+
+        if (err) {
+            result.error = err;
+        } else {
+            result.rows = rows;
         }
+
+        results.push(result);
 
         if (expected == ++actual) {
             res.end(JSON.stringify(results, null, '\t'));
@@ -45,8 +47,8 @@ Harmony.prototype.dispatch = function (res, collection, object, query) {
     };
 
     var callbackMaker = function (name, callback) {
-        return function (rows) {
-            callback(name, rows);
+        return function (err, rows) {
+            callback(name, err, rows);
         };
     };
 

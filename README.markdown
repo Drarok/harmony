@@ -1,5 +1,7 @@
 # Harmony
 
+A SQL brokering HTTP server, written in Node.js.
+
 ## Terminology.
 
 * Server: a backend storage system such as MySQL, SQLite, Postgres, MSSQL.

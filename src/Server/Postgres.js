@@ -39,6 +39,11 @@ Postgres.prototype._getTable = function (name, query, callback) {
         sql += ' WHERE ' + where.join(' AND ');
     }
 
+    if (query._sort) {
+        var sort = this.parseSort(query._sort);
+        sql += ' ORDER BY ' + this.escapeIdentifier(sort.column) + ' ' + sort.direction;
+    }
+
     if (query._limit !== undefined) {
         sql += ' LIMIT ' + parseInt(query._limit);
     }

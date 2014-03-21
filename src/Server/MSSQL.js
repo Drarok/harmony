@@ -11,11 +11,11 @@ MSSQL.prototype.connect = function(callback) {
         server: this.hostname,
         user: this.username,
         password: this.password,
-        database: this.options.database
+        database: this.options.database,
+        timeout: this.options.timeout ? this.options.timeout : 10000
     };
 
     var mssql = require('mssql');
-
     this.connection = new mssql.Connection(
         config,
         callback
@@ -37,7 +37,8 @@ MSSQL.prototype.getTable = function (name, query, callback) {
     }
 
     var sql = 'SELECT * FROM customers';
-    this.connection.query(sql, function (err, recordset) {
+    var request = this.connection.request();
+    request.query(sql, function (err, recordset) {
         if (err) {
             self.onError(err);
             return;

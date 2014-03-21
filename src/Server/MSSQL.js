@@ -22,21 +22,11 @@ MSSQL.prototype.connect = function(callback) {
     );
 };
 
-MSSQL.prototype.getTable = function (name, query, callback) {
+MSSQL.prototype._getTable = function (name, query, callback) {
     var self = this;
-    if (! this.connection) {
-        this.connect(function (err) {
-            if (err) {
-                self.onError(err);
-                return;
-            }
 
-            self.getTable(name, query, callback);
-        });
-        return;
-    }
+    var sql = 'SELECT * FROM ' + this.escapeIdentifier(name);
 
-    var sql = 'SELECT * FROM customers';
     var request = this.connection.request();
     request.query(sql, function (err, recordset) {
         if (err) {
@@ -46,6 +36,11 @@ MSSQL.prototype.getTable = function (name, query, callback) {
 
         callback(recordset);
     });
+};
+
+// TODO: Proper escaping.
+MSSQL.prototype.escapeIdentifier = function (id) {
+    return '[' + id + ']';
 };
 
 module.exports = MSSQL;

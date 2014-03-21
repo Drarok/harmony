@@ -15,22 +15,11 @@ SQLite.prototype.connect = function(callback) {
     );
 };
 
-SQLite.prototype.getTable = function (name, query, callback) {
+SQLite.prototype._getTable = function (name, query, callback) {
     var self = this;
 
-    if (! this.connection) {
-        this.connect(function (err) {
-            if (err) {
-                self.onError(err);
-                return;
-            }
+    var sql = 'SELECT * FROM ' + this.escapeIdentifier(name);
 
-            self.getTable(name, query, callback);
-        });
-        return;
-    }
-
-    var sql = 'SELECT * FROM customers';
     this.connection.all(sql, function (err, rows) {
         if (err) {
             self.onError(err);
@@ -39,6 +28,11 @@ SQLite.prototype.getTable = function (name, query, callback) {
 
         callback(rows);
     });
+};
+
+// TODO: Proper escaping.
+SQLite.prototype.escapeIdentifier = function (id) {
+    return '"' + id + '"';
 };
 
 module.exports = SQLite;

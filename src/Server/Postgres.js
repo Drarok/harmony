@@ -34,6 +34,20 @@ Postgres.prototype._getTable = function (name, query, callback) {
 
     var sql = 'SELECT * FROM ' + this.escapeIdentifier(name);
 
+    var where = this.parseQuery(query);
+    if (where.length) {
+        sql += ' WHERE ' + where.join(' AND ');
+    }
+
+    if (query._sort) {
+        var sort = this.parseSort(query._sort);
+        sql += ' ORDER BY ' + this.escapeIdentifier(sort.column) + ' ' + sort.direction;
+    }
+
+    if (query._limit !== undefined) {
+        sql += ' LIMIT ' + parseInt(query._limit);
+    }
+
     this.connection.query(sql, function (err, result) {
         if (err) {
             self.onError(err);
@@ -47,6 +61,10 @@ Postgres.prototype._getTable = function (name, query, callback) {
 // TODO: Proper escaping.
 Postgres.prototype.escapeIdentifier = function (id) {
     return '"' + id + '"';
+};
+
+Postgres.prototype.escapeValue = function (value) {
+    return '\'' + value.replace(/'/g, '\'\'') + '\'';
 };
 
 module.exports = Postgres;

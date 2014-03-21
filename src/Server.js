@@ -39,6 +39,46 @@ Server.prototype._getTable = function (name, query, callback) {
     throw 'You must override _getTable() in your Server object.';
 };
 
+Server.prototype.parseQuery = function (query) {
+    var where = [];
+
+    for (var column in query) {
+        // Ignore option keys.
+        if (column.substr(0, 1) == '_') {
+            continue;
+        }
+
+        var value = query[column];
+        var clause = this.escapeIdentifier(column);
+        if (value.indexOf('~') !== 0) {
+            clause += ' = ';
+            clause += this.escapeValue(value.replace(/^\\~/, '~'));
+        } else {
+            clause += ' LIKE ';
+            clause += this.escapeValue(value.substr(1));
+        }
+        where.push(clause);
+    }
+
+    return where;
+};
+
+Server.prototype.parseSort = function (sort) {
+    var sortMatches = sort.match(/([^\[\]]+)(?:\[(asc|desc)\])?/);
+
+    var column = sortMatches[1];
+    var direction = 'ASC';
+
+    if (sortMatches[2]) {
+        direction = sortMatches[2].toUpperCase() == 'DESC' ? 'DESC' : 'ASC';
+    }
+
+    return {
+        column: column,
+        direction: direction
+    };
+};
+
 Server.prototype.onError = function (err) {
     throw err;
 };

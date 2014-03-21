@@ -25,7 +25,23 @@ MSSQL.prototype.connect = function(callback) {
 MSSQL.prototype._getTable = function (name, query, callback) {
     var self = this;
 
-    var sql = 'SELECT * FROM ' + this.escapeIdentifier(name);
+    var sql = 'SELECT ';
+
+    if (query._limit !== undefined) {
+        sql += 'TOP ' + parseInt(query._limit) + ' ';
+    }
+
+    sql += '* FROM ' + this.escapeIdentifier(name);
+
+    var where = this.parseQuery(query);
+    if (where.length) {
+        sql += ' WHERE ' + where.join(' AND ');
+    }
+
+    if (query._sort) {
+        var sort = this.parseSort(query._sort);
+        sql += ' ORDER BY ' + this.escapeIdentifier(sort.column) + ' ' + sort.direction;
+    }
 
     var request = this.connection.request();
     request.query(sql, function (err, recordset) {
@@ -41,6 +57,10 @@ MSSQL.prototype._getTable = function (name, query, callback) {
 // TODO: Proper escaping.
 MSSQL.prototype.escapeIdentifier = function (id) {
     return '[' + id + ']';
+};
+
+MSSQL.prototype.escapeValue = function (value) {
+    return '\'' + value.replace(/'/g, '\'\'') + '\'';
 };
 
 module.exports = MSSQL;

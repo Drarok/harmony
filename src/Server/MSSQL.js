@@ -25,7 +25,13 @@ MSSQL.prototype.connect = function(callback) {
 MSSQL.prototype._getTable = function (name, query, callback) {
     var self = this;
 
-    var sql = 'SELECT * FROM ' + this.escapeIdentifier(name);
+    var sql = 'SELECT ';
+
+    if (query._limit !== undefined) {
+        sql += 'TOP ' + parseInt(query._limit) + ' ';
+    }
+
+    sql += '* FROM ' + this.escapeIdentifier(name);
 
     var where = this.parseQuery(query);
     if (where.length) {

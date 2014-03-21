@@ -28,7 +28,9 @@ MySQL.prototype._getTable = function (name, query, callback) {
         sql += ' WHERE ' + where.join(' AND ');
     }
 
-    console.log(sql);
+    if (query._limit !== undefined) {
+        sql += ' LIMIT ' + parseInt(query._limit);
+    }
 
     this.connection.query(sql, function (err, rows) {
         if (err) {

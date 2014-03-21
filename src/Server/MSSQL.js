@@ -27,6 +27,11 @@ MSSQL.prototype._getTable = function (name, query, callback) {
 
     var sql = 'SELECT * FROM ' + this.escapeIdentifier(name);
 
+    var where = this.parseQuery(query);
+    if (where.length) {
+        sql += 'WHERE ' + where.join(' AND ');
+    }
+
     var request = this.connection.request();
     request.query(sql, function (err, recordset) {
         if (err) {
@@ -41,6 +46,10 @@ MSSQL.prototype._getTable = function (name, query, callback) {
 // TODO: Proper escaping.
 MSSQL.prototype.escapeIdentifier = function (id) {
     return '[' + id + ']';
+};
+
+MSSQL.prototype.escapeValue = function (value) {
+    return '\'' + value.replace('\'', '\'\'') + '\'';
 };
 
 module.exports = MSSQL;

@@ -23,6 +23,11 @@ MySQL.prototype._getTable = function (name, query, callback) {
 
     var sql = 'SELECT * FROM ' + this.escapeIdentifier(name);
 
+    var where = this.parseQuery(query);
+    if (where.length) {
+        sql += 'WHERE ' + where.join(' AND ');
+    }
+
     this.connection.query(sql, function (err, rows) {
         if (err) {
             self.onError(err);
@@ -36,6 +41,10 @@ MySQL.prototype._getTable = function (name, query, callback) {
 // TODO: Proper escaping.
 MySQL.prototype.escapeIdentifier = function (id) {
     return '`' + id + '`';
+};
+
+MySQL.prototype.escapeValue = function (value) {
+    return '\'' + value.replace('\'', '\\\'') + '\'';
 };
 
 module.exports = MySQL;

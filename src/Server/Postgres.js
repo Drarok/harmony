@@ -57,7 +57,7 @@ Postgres.prototype.escapeIdentifier = function (id) {
 };
 
 Postgres.prototype.escapeValue = function (value) {
-    return '\'' + value.replace('\'', '\'\'') + '\'';
+    return '\'' + value.replace(/'/g, '\'\'') + '\'';
 };
 
 module.exports = Postgres;

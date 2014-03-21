@@ -43,7 +43,7 @@ SQLite.prototype.escapeIdentifier = function (id) {
 };
 
 SQLite.prototype.escapeValue = function (value) {
-    return '\'' + value.replace('\'', '\'\'') + '\'';
+    return '\'' + value.replace(/'/g, '\'\'') + '\'';
 };
 
 module.exports = SQLite;

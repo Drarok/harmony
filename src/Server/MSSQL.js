@@ -51,7 +51,7 @@ MSSQL.prototype.escapeIdentifier = function (id) {
 };
 
 MSSQL.prototype.escapeValue = function (value) {
-    return '\'' + value.replace('\'', '\'\'') + '\'';
+    return '\'' + value.replace(/'/g, '\'\'') + '\'';
 };
 
 module.exports = MSSQL;

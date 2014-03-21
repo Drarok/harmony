@@ -46,7 +46,7 @@ MySQL.prototype.escapeIdentifier = function (id) {
 };
 
 MySQL.prototype.escapeValue = function (value) {
-    return '\'' + value.replace('\'', '\\\'') + '\'';
+    return this.connection.escape(value);
 };
 
 module.exports = MySQL;

@@ -39,7 +39,7 @@ SQLite.prototype._getTable = function (name, query, callback) {
 
 // TODO: Proper escaping.
 SQLite.prototype.escapeIdentifier = function (id) {
-    return '"' + id + '"';
+    return '[' + id + ']';
 };
 
 SQLite.prototype.escapeValue = function (value) {

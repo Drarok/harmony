@@ -1,6 +1,6 @@
 {
   "name": "harmony",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "A SQL brokering server, written in Node.js.",
   "main": "harmony.js",
   "scripts": {

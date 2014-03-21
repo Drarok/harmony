@@ -24,14 +24,13 @@ Server.prototype.getTable = function (name, query, callback) {
     if (! this.isConnected()) {
         this.connect(function (err) {
             if (err) {
-                self.onError(err);
-                return;
+                throw err;
             }
 
             self._getTable(name, query, callback);
         });
     } else {
-        this._getTable(name, query, callback);
+        self._getTable(name, query, callback);
     }
 };
 
@@ -77,10 +76,6 @@ Server.prototype.parseSort = function (sort) {
         column: column,
         direction: direction
     };
-};
-
-Server.prototype.onError = function (err) {
-    throw err;
 };
 
 module.exports = Server;

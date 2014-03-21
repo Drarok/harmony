@@ -50,11 +50,11 @@ Postgres.prototype._getTable = function (name, query, callback) {
 
     this.connection.query(sql, function (err, result) {
         if (err) {
-            self.onError(err);
+            callback(err);
             return;
+        } else {
+            callback(undefined, result.rows);
         }
-
-        callback(result.rows);
     });
 };
 

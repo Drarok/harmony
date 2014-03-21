@@ -18,22 +18,11 @@ MySQL.prototype.connect = function(callback) {
     this.connection.connect(callback);
 };
 
-MySQL.prototype.getTable = function (name, query, callback) {
+MySQL.prototype._getTable = function (name, query, callback) {
     var self = this;
 
-    if (! this.connection) {
-        this.connect(function (err) {
-            if (err) {
-                self.onError(err);
-                return;
-            }
+    var sql = 'SELECT * FROM ' + this.escapeIdentifier(name);
 
-            self.getTable(name, query, callback);
-        });
-        return;
-    }
-
-    var sql = 'SELECT * FROM customers';
     this.connection.query(sql, function (err, rows) {
         if (err) {
             self.onError(err);
@@ -42,6 +31,11 @@ MySQL.prototype.getTable = function (name, query, callback) {
 
         callback(rows);
     });
+};
+
+// TODO: Proper escaping.
+MySQL.prototype.escapeIdentifier = function (id) {
+    return '`' + id + '`';
 };
 
 module.exports = MySQL;

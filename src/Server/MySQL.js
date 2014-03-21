@@ -37,14 +37,7 @@ MySQL.prototype._getTable = function (name, query, callback) {
         sql += ' LIMIT ' + parseInt(query._limit);
     }
 
-    this.connection.query(sql, function (err, rows) {
-        if (err) {
-            self.onError(err);
-            return;
-        }
-
-        callback(rows);
-    });
+    this.connection.query(sql, callback);
 };
 
 // TODO: Proper escaping.

@@ -44,14 +44,7 @@ MSSQL.prototype._getTable = function (name, query, callback) {
     }
 
     var request = this.connection.request();
-    request.query(sql, function (err, recordset) {
-        if (err) {
-            self.onError(err);
-            return;
-        }
-
-        callback(recordset);
-    });
+    request.query(sql, callback);
 };
 
 // TODO: Proper escaping.

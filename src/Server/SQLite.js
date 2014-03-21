@@ -34,14 +34,7 @@ SQLite.prototype._getTable = function (name, query, callback) {
         sql += ' LIMIT ' + parseInt(query._limit);
     }
 
-    this.connection.all(sql, function (err, rows) {
-        if (err) {
-            self.onError(err);
-            return;
-        }
-
-        callback(rows);
-    });
+    this.connection.all(sql, callback);
 };
 
 // TODO: Proper escaping.

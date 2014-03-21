@@ -63,6 +63,22 @@ Server.prototype.parseQuery = function (query) {
     return where;
 };
 
+Server.prototype.parseSort = function (sort) {
+    var sortMatches = sort.match(/([^\[\]]+)(?:\[(asc|desc)\])?/);
+
+    var column = sortMatches[1];
+    var direction = 'ASC';
+
+    if (sortMatches[2]) {
+        direction = sortMatches[2].toUpperCase() == 'DESC' ? 'DESC' : 'ASC';
+    }
+
+    return {
+        column: column,
+        direction: direction
+    };
+};
+
 Server.prototype.onError = function (err) {
     throw err;
 };

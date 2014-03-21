@@ -43,14 +43,19 @@ Server.prototype.parseQuery = function (query) {
     var where = [];
 
     for (var column in query) {
+        // Ignore option keys.
+        if (column.substr(0, 1) == '_') {
+            continue;
+        }
+
         var value = query[column];
         var clause = this.escapeIdentifier(column);
-        if (value.indexOf('*') === -1) {
+        if (value.indexOf('~') !== 0) {
             clause += ' = ';
-            clause += this.escapeValue(value);
+            clause += this.escapeValue(value.replace(/^\\~/, '~'));
         } else {
             clause += ' LIKE ';
-            clause += this.escapeValue(value.replace(/\*/g, '%'));
+            clause += this.escapeValue(value.substr(1));
         }
         where.push(clause);
     }

@@ -50,7 +50,7 @@ Server.prototype.parseQuery = function (query) {
             clause += this.escapeValue(value);
         } else {
             clause += ' LIKE ';
-            clause += this.escapeValue(value.replace('*', '%'));
+            clause += this.escapeValue(value.replace(/\*/g, '%'));
         }
         where.push(clause);
     }

@@ -19,6 +19,11 @@ Harmony.prototype.handleRequest = function (req, res) {
 
     var collection = this.collections[parsed.collection];
 
+    if (parsed.object === '_all_objects') {
+        this.writeAllObjects(res, collection.objects);
+        return;
+    }
+
     if (! (parsed.object in collection.objects)) {
         this.writeNotFoundError(res, 'no_such_object');
         return;
@@ -70,11 +75,20 @@ Harmony.prototype.dispatch = function (res, collection, object, query) {
 
 Harmony.prototype.writeAllCollections = function (res) {
     res.writeHead(200, {'Content-Type': 'application/json'});
-    var collections = [];
+    var result = [];
     for (var k in this.collections) {
-        collections.push(k);
+        result.push(k);
     }
-    res.end(JSON.stringify(collections));
+    res.end(JSON.stringify(result));
+};
+
+Harmony.prototype.writeAllObjects = function (res, objects) {
+    res.writeHead(200, {'Content-Type': 'application/json'});
+    var result = [];
+    for (var k in objects) {
+        result.push(k);
+    }
+    res.end(JSON.stringify(result));
 };
 
 Harmony.prototype.writeNotFoundError = function (res, reason) {

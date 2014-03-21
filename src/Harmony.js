@@ -7,6 +7,11 @@ function Harmony(configPath) {
 Harmony.prototype.handleRequest = function (req, res) {
     var parsed = this.parseRequest(req);
 
+    if (parsed.collection === '_all_collections') {
+        this.writeAllCollections(res);
+        return;
+    }
+
     if (! (parsed.collection in this.collections)) {
         this.writeNotFoundError(res, 'no_such_collection');
         return;
@@ -23,17 +28,17 @@ Harmony.prototype.handleRequest = function (req, res) {
 };
 
 Harmony.prototype.dispatch = function (res, collection, object, query) {
-    res.writeHead(200, {'Content-Type': 'application/json'});
-
     var expected = 0;
     var actual = 0;
 
+    var error = false;
     var results = [];
 
     var callback = function (name, err, rows) {
         var result = {server: name};
 
         if (err) {
+            error = true;
             result.error = err;
         } else {
             result.rows = rows;
@@ -42,6 +47,7 @@ Harmony.prototype.dispatch = function (res, collection, object, query) {
         results.push(result);
 
         if (expected == ++actual) {
+            res.writeHead(error ? 500 : 200, {'Content-Type': 'application/json'});
             res.end(JSON.stringify(results, null, '\t'));
         }
     };
@@ -60,6 +66,15 @@ Harmony.prototype.dispatch = function (res, collection, object, query) {
         var server = collection.servers[name];
         server.getTable(object, query, callbackMaker(name, callback));
     }
+};
+
+Harmony.prototype.writeAllCollections = function (res) {
+    res.writeHead(200, {'Content-Type': 'application/json'});
+    var collections = [];
+    for (var k in this.collections) {
+        collections.push(k);
+    }
+    res.end(JSON.stringify(collections));
 };
 
 Harmony.prototype.writeNotFoundError = function (res, reason) {

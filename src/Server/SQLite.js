@@ -27,6 +27,7 @@ SQLite.prototype.getTable = function (name, query, callback) {
 
             self.getTable(name, query, callback);
         });
+        return;
     }
 
     var sql = 'SELECT * FROM customers';

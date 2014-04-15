@@ -1,10 +1,10 @@
 # Harmony
 
-A SQL brokering HTTP server, written in Node.js.
+A data brokering HTTP server, written in Node.js.
 
 ## Terminology.
 
-* Server: a backend storage system such as MySQL, SQLite, Postgres, MSSQL.
+* Server: a backend storage system such as MySQL, SQLite, Postgres, MSSQL, CouchDB, MongoDB, etc.
 * Table: a table on a given Server.
 * Object: a grouped-together and column-mapped set of Tables, producing results.
 * Collection: a group of logically-related Objects.

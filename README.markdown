@@ -35,3 +35,11 @@ Query keys prefixed with an underscore are reserved. Currently, sorting and limi
     GET /support/customers?_sort=id&_limit=10
     GET /support/customers?_sort=id[asc]&_limit=20
     GET /support/customers?_sort=id[desc]&_limit=50
+
+## Contributors
+
+The contributors to Harmony are contained in the "CONTRIBUTORS.txt" file.
+
+## License
+
+The license for Harmony is contained in the "LICENSE.txt" file.

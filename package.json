@@ -2,7 +2,7 @@
   "name": "harmony",
   "version": "0.1.0",
   "repository": "git://drarok.com/harmony.git",
-  "description": "A SQL brokering HTTP server, written in Node.js.",
+  "description": "A data brokering HTTP server, written in Node.js.",
   "main": "harmony.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

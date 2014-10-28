@@ -1,7 +1,7 @@
 {
   "name": "harmony",
   "version": "0.1.0",
-  "repository": "git://drarok.com/harmony.git",
+  "repository": "http://github.com/Drarok/harmony.git",
   "description": "A data brokering HTTP server, written in Node.js.",
   "main": "harmony.js",
   "scripts": {

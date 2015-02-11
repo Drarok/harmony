@@ -12,7 +12,7 @@
             },
             "sqlite": {
                 "type": "SQLite",
-                "hostname": "/tmp/harmony.sqlite3"
+                "hostname": "./harmony.sqlite3"
             },
             "postgres": {
                 "type": "Postgres",
@@ -22,10 +22,30 @@
                 "options": {
                     "database": "test"
                 }
+            },
+            "tsv": {
+                "type": "CSV",
+                "path": "./harmony.tsv",
+                "options": {
+                    "delimiter": "\t"
+                }
+            },
+            "csv": {
+                "type": "CSV",
+                "path": "./harmony.tsv",
+                "options": {
+                    "delimiter": ","
+                }
             }
         },
         "objects": {
-            "customers": ["mysql", "sqlite", "postgres"]
+            "customers": [
+                "mysql",
+                "sqlite",
+                "postgres",
+                "tsv",
+                "csv"
+            ]
         }
     }
 }

@@ -10,9 +10,10 @@
   "author": "Mat Gadd <source@catchall.drarok.com>",
   "license": "ISC",
   "dependencies": {
-    "sqlite3": "~2.2",
+    "csv-parse": "0.0.6",
+    "mssql": "^0.5.0",
     "mysql": "~2.1",
     "pg": "~2.11",
-    "mssql": "^0.5.0"
+    "sqlite3": "~2.2"
   }
 }

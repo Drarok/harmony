@@ -8,10 +8,11 @@ A data brokering HTTP server, written in Node.js.
 * MySQL
 * PostgreSQL
 * MSSQL
+* CSV/TSV
 
 ## Terminology.
 
-* Server: a backend storage system such as MySQL, SQLite, Postgres, or MSSQL.
+* Server: a backend storage system such as MySQL, SQLite, Postgres, MSSQL, or even CSV/TSV files.
 * Table: a table on a given Server.
 * Object: a grouped-together set of Tables, producing results.
 * Collection: a group of Objects.
@@ -69,7 +70,7 @@ Apply a WHERE *column* LIKE *value* clause to each server: `WHERE name LIKE 'Ini
 
     GET /support/customers?name=~Init%
 
-To match a literal tilde, escape it with a backslash: `WHERE name = '~Init'`.
+To match a literal tilde, escape it with a backslash: `WHERE name = '~Init%'`.
 
     GET /support/customers?name=\~Init%
 

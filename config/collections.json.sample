@@ -25,16 +25,20 @@
             },
             "tsv": {
                 "type": "CSV",
-                "path": "./harmony.tsv",
                 "options": {
-                    "delimiter": "\t"
+                    "delimiter": "\t",
+                    "paths": {
+                        "customers": "./customers.tsv"
+                    }
                 }
             },
             "csv": {
                 "type": "CSV",
-                "path": "./harmony.tsv",
                 "options": {
-                    "delimiter": ","
+                    "delimiter": ",",
+                    "paths": {
+                        "customers": "./customers.csv"
+                    }
                 }
             }
         },

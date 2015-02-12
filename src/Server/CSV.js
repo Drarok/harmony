@@ -59,18 +59,16 @@ CSV.prototype._getTable = function (name, query, callback) {
                 return;
             }
 
-            if (! query._limit || (query._limit && query._limit > data.length)) {
-                var keyedRow = {};
+            var keyedRow = {};
 
-                row.forEach(function (value, index) {
-                    keyedRow[columns[index]] = value;
-                });
+            row.forEach(function (value, index) {
+                keyedRow[columns[index]] = value;
+            });
 
-                if (where === false) {
-                    data.push(keyedRow);
-                } else if (where(keyedRow)) {
-                    data.push(keyedRow);
-                }
+            if (where === false) {
+                data.push(keyedRow);
+            } else if (where(keyedRow)) {
+                data.push(keyedRow);
             }
         })
         .on('end', function () {
@@ -93,6 +91,10 @@ CSV.prototype._getTable = function (name, query, callback) {
 
                     return a[sort.column] < b[sort.column] ? sort.direction[0] : sort.direction[1];
                 });
+            }
+
+            if (query._limit) {
+                data = data.slice(0, query._limit);
             }
 
             callback(undefined, data);

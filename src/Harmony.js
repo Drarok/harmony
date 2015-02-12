@@ -118,8 +118,23 @@ Harmony.prototype.createCollections = function (configPath) {
     var config = fs.readFileSync(configPath);
     var json = JSON.parse(config);
 
+    var validateObjects = function (collection) {
+        return function (server) {
+            if (! (server in collection.servers)) {
+                throw 'No such server \'' + server + '\' in collection \'' + c + '\', object \'' + object + '\'.';
+            }
+        };
+    };
+
     for (var c in json) {
         var collection = json[c];
+
+        // Validate the objects' servers before we start creating Server instances.
+        for (var object in collection.objects) {
+            collection.objects[object].forEach(validateObjects(collection));
+        }
+
+        // Create the server objects, replacing the config object.
         for (var s in collection.servers) {
             var server = collection.servers[s];
             collection.servers[s] = factory(

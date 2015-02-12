@@ -122,7 +122,7 @@ CSV.prototype.parseQuery = function (query) {
             } else {
                 var clean = value.substr(1).replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&');
                 clean = clean.replace(/%/g, '.*');
-                var regexp = new RegExp(clean, 'i');
+                var regexp = new RegExp('^' + clean + '$', 'i');
                 match = Boolean(row[column].match(regexp));
             }
 

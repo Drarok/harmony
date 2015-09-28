@@ -1,49 +1,47 @@
 var Server = require('../Server.js');
 
 function SQLite() {
-    Server.apply(this, Array.prototype.slice.call(arguments));
+  Server.apply(this, Array.prototype.slice.call(arguments));
 }
 
 SQLite.prototype = new Server();
 
-SQLite.prototype.connect = function(callback) {
-    var sqlite3 = require('sqlite3');
-    this.connection = new sqlite3.Database(
-        this.hostname,
-        sqlite3.OPEN_READONLY,
-        callback
+SQLite.prototype.connect = function (callback) {
+  var sqlite3 = require('sqlite3');
+  this.connection = new sqlite3.Database(
+    this.hostname,
+    sqlite3.OPEN_READONLY,
+    callback
     );
 };
 
 SQLite.prototype._getTable = function (name, query, callback) {
-    var self = this;
+  var sql = 'SELECT * FROM ' + this.escapeIdentifier(name);
 
-    var sql = 'SELECT * FROM ' + this.escapeIdentifier(name);
+  var where = this.parseQuery(query);
+  if (where.length) {
+    sql += ' WHERE ' + where.join(' AND ');
+  }
 
-    var where = this.parseQuery(query);
-    if (where.length) {
-        sql += ' WHERE ' + where.join(' AND ');
-    }
+  if (query._sort) {
+    var sort = this.parseSort(query._sort);
+    sql += ' ORDER BY ' + this.escapeIdentifier(sort.column) + ' ' + sort.direction;
+  }
 
-    if (query._sort) {
-        var sort = this.parseSort(query._sort);
-        sql += ' ORDER BY ' + this.escapeIdentifier(sort.column) + ' ' + sort.direction;
-    }
+  if (query._limit !== undefined) {
+    sql += ' LIMIT ' + parseInt(query._limit);
+  }
 
-    if (query._limit !== undefined) {
-        sql += ' LIMIT ' + parseInt(query._limit);
-    }
-
-    this.connection.all(sql, callback);
+  this.connection.all(sql, callback);
 };
 
 // TODO: Proper escaping.
 SQLite.prototype.escapeIdentifier = function (id) {
-    return '[' + id + ']';
+  return '[' + id + ']';
 };
 
 SQLite.prototype.escapeValue = function (value) {
-    return '\'' + value.replace(/'/g, '\'\'') + '\'';
+  return '\'' + value.replace(/'/g, '\'\'') + '\'';
 };
 
 module.exports = SQLite;

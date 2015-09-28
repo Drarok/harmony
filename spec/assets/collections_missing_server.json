@@ -1,0 +1,16 @@
+{
+  "collection": {
+    "servers": {
+      "sqlite": {
+        "type": "SQLite",
+        "hostname": "/tmp/harmony.sqlite3"
+      }
+    },
+    "objects": {
+      "table": [
+        "sqlite",
+        "mysql"
+      ]
+    }
+  }
+}

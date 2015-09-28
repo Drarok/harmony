@@ -1,0 +1,65 @@
+{
+  "collection1": {
+    "servers": {
+      "mysql": {
+        "type": "MySQL",
+        "hostname": "127.0.0.1",
+        "username": "root",
+        "password": "",
+        "options": {
+          "database": "test"
+        }
+      },
+      "sqlite": {
+        "type": "SQLite",
+        "hostname": "/tmp/harmony.sqlite3"
+      }
+    },
+    "objects": {
+      "table1": [
+        "mysql",
+        "sqlite"
+      ],
+      "table2": [
+        "mysql"
+      ],
+      "table3": [
+        "sqlite"
+      ]
+    }
+  },
+  "collection2": {
+    "servers": {
+      "postgres": {
+        "type": "Postgres",
+        "hostname": "127.0.0.1",
+        "username": "root",
+        "password": "",
+        "options": {
+          "database": "test"
+        }
+      },
+      "csv": {
+        "type": "CSV",
+        "options": {
+          "delimiter": ",",
+          "paths": {
+            "customers": "/tmp/customers.csv"
+          }
+        }
+      }
+    },
+    "objects": {
+      "table1": [
+        "postgres",
+        "csv"
+      ],
+      "table2": [
+        "postgres"
+      ],
+      "table3": [
+        "csv"
+      ]
+    }
+  }
+}

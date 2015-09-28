@@ -1,4 +1,5 @@
 var url = require('url');
+var util = require('util');
 
 function Harmony(configPath) {
   this.collections = this.createCollections(configPath);
@@ -116,12 +117,23 @@ Harmony.prototype.createCollections = function (configPath) {
   var factory = require('./Server').factory;
 
   var config = fs.readFileSync(configPath);
-  var json = JSON.parse(config);
+  var json;
+
+  try {
+    json = JSON.parse(config);
+  } catch (e) {
+    throw new Error('Config file is not valid JSON.');
+  }
 
   var validateObjects = function (collection) {
     return function (server) {
       if (!(server in collection.servers)) {
-        throw 'No such server \'' + server + '\' in collection \'' + c + '\', object \'' + object + '\'.';
+        throw new Error(util.format(
+          'No such server \'%s\' in collection \'%s\', object \'%s\'.',
+          server,
+          c,
+          object
+        ));
       }
     };
   };

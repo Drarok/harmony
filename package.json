@@ -17,11 +17,11 @@
     "sqlite3": "3.0.x"
   },
   "devDependencies": {
-    "gulp": "~3.9.0",
-    "gulp-jasmine": "~2.1.0",
-    "gulp-jscs": "^3.0.0",
-    "gulp-jscs-stylish": "^1.2.1",
-    "gulp-jshint": "^1.11.2",
-    "jshint-stylish": "^2.0.1"
+    "gulp": "3.9.x",
+    "gulp-jasmine": "2.1.x",
+    "gulp-jscs": "3.0.x",
+    "gulp-jscs-stylish": "1.2.x",
+    "gulp-jshint": "1.11.x",
+    "jshint-stylish": "2.0.x"
   }
 }

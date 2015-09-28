@@ -1,3 +1,5 @@
+var http = require('./helpers/http');
+
 describe('Harmony', function () {
   var Harmony = require('../src/Harmony');
 
@@ -33,12 +35,62 @@ describe('Harmony', function () {
     });
   });
 
-  describe('other stuff', function () {
+  describe('handleRequest', function () {
+    var harmony;
+    var res;
+
     beforeEach(function () {
-      console.log('beforeEach other stuff');
+      harmony = new Harmony(__dirname + '/assets/collections_valid.json');
+      spyOn(harmony, 'dispatch');
+      expect(harmony.dispatch).not.toHaveBeenCalled();
+
+      res = http.response();
     });
 
-    it('should behave...', function () {
+    afterEach(function () {
+      expect(res.headers['Content-Type']).toEqual('application/json');
+    });
+
+    it('should output all collections', function () {
+      var req = http.request('/_all_collections');
+      harmony.handleRequest(req, res);
+
+      expect(res.statusCode).toBe(200);
+      expect(res.body).toEqual(JSON.stringify(['collection1', 'collection2']));
+    });
+
+    it('should error when collection does not exist', function () {
+      var req = http.request('/invalid_collection');
+      harmony.handleRequest(req, res);
+
+      expect(res.statusCode).toBe(404);
+      expect(res.body).toEqual(JSON.stringify({
+        error: 'not_found',
+        reason: 'no_such_collection'
+      }));
+    });
+
+    it('should output all objects for a collection', function () {
+      var req = http.request('/collection1/_all_objects');
+      harmony.handleRequest(req, res);
+
+      expect(res.statusCode).toBe(200);
+      expect(res.body).toEqual(JSON.stringify([
+        'table1',
+        'table2',
+        'table3'
+      ]));
+    });
+
+    it('should error when object does not exist', function () {
+      var req = http.request('/collection1/invalid_object');
+      harmony.handleRequest(req, res);
+
+      expect(res.statusCode).toBe(404);
+      expect(res.body).toEqual(JSON.stringify({
+        error: 'not_found',
+        reason: 'no_such_object'
+      }));
     });
   });
 });

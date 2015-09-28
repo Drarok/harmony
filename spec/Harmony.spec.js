@@ -1,7 +1,19 @@
+var fs = require('fs');
 var http = require('./helpers/http');
 
 describe('Harmony', function () {
   var Harmony = require('../src/Harmony');
+
+  beforeAll(function (done) {
+    console.log('Copying sqlite3 asset');
+
+    var asset = fs.createReadStream(__dirname + '/assets/harmony.sqlite3');
+    asset.pipe(fs.createWriteStream('/tmp/harmony.sqlite3'));
+    asset.on('end', function () {
+      console.log('Copy complete');
+      done();
+    });
+  });
 
   describe('constructor', function () {
     it('should fail if config does not exist', function () {
@@ -48,7 +60,7 @@ describe('Harmony', function () {
     });
 
     afterEach(function () {
-      expect(res.headers['Content-Type']).toEqual('application/json');
+      expect(res.headers && res.headers['Content-Type']).toEqual('application/json');
     });
 
     it('should output all collections', function () {
@@ -91,6 +103,39 @@ describe('Harmony', function () {
         error: 'not_found',
         reason: 'no_such_object'
       }));
+    });
+
+    fdescribe('dispatch', function () {
+      it('should return data', function (done) {
+        harmony.dispatch.and.callThrough();
+        expect(harmony.dispatch).toHaveBeenCalled();
+
+        res.on('end', function () {
+          var data = [
+            {
+              server: 'sqlite',
+              rows: [
+                {
+                  id: 1,
+                  name: 'Customer1'
+                },
+                {
+                  id: 2,
+                  name: 'Customer2'
+                }
+              ]
+            }
+          ];
+
+          expect(res.statusCode).toBe(200);
+          expect(res.body).toEqual(JSON.stringify(data, null, '  '));
+          done();
+        });
+
+        var req = http.request('/collection1/table3');
+        harmony.handleRequest(req, res);
+        console.log('res', res);
+      });
     });
   });
 });

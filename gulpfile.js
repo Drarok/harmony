@@ -11,16 +11,16 @@ var jshintStylish = require('jshint-stylish');
 var paths = [
   './gulpfile.js',
   './harmony.js',
+  './spec/**/*.js',
   './src/**/*.js'
 ];
 
 gulp.task('jasmine', function () {
   var tests = [
-    './spec/**/*.js',
-    '!./spec/conf.js'
+    './spec/**/*.spec.js'
   ];
 
-  return gulp.src(tests, { read: false })
+  return gulp.src(tests)
     .pipe(jasmine())
     .on('error', function (e) {
       throw e;
@@ -37,6 +37,10 @@ gulp.task('standards', function () {
     .pipe(jscsStylish.combineWithHintResults())
     .pipe(jshint.reporter(jshintStylish))
     .pipe(jshint.reporter('fail'));
+});
+
+gulp.task('watch', ['test'], function () {
+  return gulp.watch(paths, ['test']);
 });
 
 gulp.task('default', ['test']);

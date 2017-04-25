@@ -1,47 +1,44 @@
-var Server = require('../Server.js');
+const sqlite3 = require('sqlite3');
 
-function SQLite() {
-  Server.apply(this, Array.prototype.slice.call(arguments));
-}
+const Server = require('../Server.js');
 
-SQLite.prototype = new Server();
-
-SQLite.prototype.connect = function (callback) {
-  var sqlite3 = require('sqlite3');
-  this.connection = new sqlite3.Database(
-    this.hostname,
-    sqlite3.OPEN_READONLY,
-    callback
+class SQLite extends Server {
+  connect(callback) {
+    this.connection = new sqlite3.Database(
+      this.hostname,
+      sqlite3.OPEN_READONLY,
+      callback
     );
-};
-
-SQLite.prototype._getTable = function (name, query, callback) {
-  var sql = 'SELECT * FROM ' + this.escapeIdentifier(name);
-
-  var where = this.parseQuery(query);
-  if (where.length) {
-    sql += ' WHERE ' + where.join(' AND ');
   }
 
-  if (query._sort) {
-    var sort = this.parseSort(query._sort);
-    sql += ' ORDER BY ' + this.escapeIdentifier(sort.column) + ' ' + sort.direction;
+  _getTable(name, query, callback) {
+    let sql = 'SELECT * FROM ' + this.escapeIdentifier(name);
+
+    let where = this.parseQuery(query);
+    if (where.length) {
+      sql += ' WHERE ' + where.join(' AND ');
+    }
+
+    if (query._sort) {
+      let sort = this.parseSort(query._sort);
+      sql += ' ORDER BY ' + this.escapeIdentifier(sort.column) + ' ' + sort.direction;
+    }
+
+    if (query._limit !== undefined) {
+      sql += ' LIMIT ' + parseInt(query._limit);
+    }
+
+    this.connection.all(sql, callback);
   }
 
-  if (query._limit !== undefined) {
-    sql += ' LIMIT ' + parseInt(query._limit);
+  // TODO: Proper escaping.
+  escapeIdentifier(id) {
+    return `[${id}]`;
   }
 
-  this.connection.all(sql, callback);
-};
-
-// TODO: Proper escaping.
-SQLite.prototype.escapeIdentifier = function (id) {
-  return '[' + id + ']';
-};
-
-SQLite.prototype.escapeValue = function (value) {
-  return '\'' + value.replace(/'/g, '\'\'') + '\'';
-};
+  escapeValue(value) {
+    return '\'' + value.replace(/'/g, '\'\'') + '\'';
+  }
+}
 
 module.exports = SQLite;

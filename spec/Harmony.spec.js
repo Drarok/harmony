@@ -1,16 +1,35 @@
 var fs = require('fs');
 var http = require('./helpers/http');
 
+describe('Node', () => {
+  it('should support Promise.all()', (done) => {
+    let factory = () => {
+      return new Promise((resolve) => {
+        setTimeout(() => resolve(true), Math.floor(50 + Math.random() * 50));
+      });
+    };
+
+    Promise.all([
+      factory(),
+      factory(),
+      factory()
+    ])
+    .then(promises => {
+      promises.forEach(p => {
+        expect(p).toBe(true);
+      });
+      done();
+    });
+  });
+});
+
 describe('Harmony', () => {
   var Harmony = require('../src/Harmony');
 
   beforeAll(function (done) {
-    console.log('Copying sqlite3 asset');
-
     var asset = fs.createReadStream(__dirname + '/assets/harmony.sqlite3');
     asset.pipe(fs.createWriteStream('/tmp/harmony.sqlite3'));
     asset.on('end', () => {
-      console.log('Copy complete');
       done();
     });
   });

@@ -126,25 +126,21 @@ Harmony.prototype.createCollections = function (configPath) {
     throw new Error('Config file is not valid JSON.');
   }
 
-  var validateObjects = function (collection) {
-    return function (server) {
-      if (!(server in collection.servers)) {
-        throw new Error(util.format(
-          'No such server \'%s\' in collection \'%s\', object \'%s\'.',
-          server,
-          c,
-          object
-        ));
-      }
-    };
-  };
-
   for (var c in json) {
     var collection = json[c];
 
     // Validate the objects' servers before we start creating Server instances.
     for (var object in collection.objects) {
-      collection.objects[object].forEach(validateObjects(collection));
+      collection.objects[object].forEach((server) => {
+        if (!(server in collection.servers)) {
+          throw new Error(util.format(
+            'No such server \'%s\' in collection \'%s\', object \'%s\'.',
+            server,
+            c,
+            object
+          ));
+        }
+      });
     }
 
     // Create the server objects, replacing the config object.

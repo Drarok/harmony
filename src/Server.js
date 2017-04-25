@@ -10,6 +10,7 @@ Server.factory = function (type, hostname, username, password, options) {
   return new ServerObject(hostname, username, password, options);
 };
 
+// eslint-disable-next-line no-unused-vars
 Server.prototype.connect = function (callback) {
   throw 'You must override connect() in your Server object.';
 };
@@ -34,6 +35,7 @@ Server.prototype.getTable = function (name, query, callback) {
   }
 };
 
+// eslint-disable-next-line no-unused-vars
 Server.prototype._getTable = function (name, query, callback) {
   throw 'You must override _getTable() in your Server object.';
 };

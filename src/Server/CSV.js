@@ -31,15 +31,11 @@ CSV.prototype._getTable = function (name, query, callback) {
   var columns;
   var data = [];
 
-  var index = 0;
-
   var input = require('fs').createReadStream(this.options.paths[name]);
 
   input
   .pipe(parse({ delimiter: this.options.delimiter || ',' }))
   .on('data', function (row) {
-    ++index;
-
     if (columns === undefined) {
       columns = row;
 

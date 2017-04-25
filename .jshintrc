@@ -1,7 +1,0 @@
-{
-  "asi": true,
-  "node": true,
-  "sub": true,
-  "undef": true,
-  "unused": "vars"
-}

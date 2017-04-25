@@ -1,22 +1,10 @@
-var gulp = require('gulp');
+const gulp = require('gulp');
 
-var jasmine = require('gulp-jasmine');
+const jasmine = require('gulp-jasmine');
+const eslint = require('gulp-eslint');
 
-var jscs = require('gulp-jscs');
-var jscsStylish = require('gulp-jscs-stylish');
-
-var jshint = require('gulp-jshint');
-var jshintStylish = require('jshint-stylish');
-
-var paths = [
-  './gulpfile.js',
-  './harmony.js',
-  './spec/**/*.js',
-  './src/**/*.js'
-];
-
-gulp.task('jasmine', function () {
-  var tests = [
+gulp.task('jasmine', () => {
+  let tests = [
     './spec/**/*.spec.js'
   ];
 
@@ -27,16 +15,18 @@ gulp.task('jasmine', function () {
     });
 });
 
-gulp.task('standards', function () {
+let paths = [
+  './gulpfile.js',
+  './harmony.js',
+  './spec/**/*.js',
+  './src/**/*.js'
+];
+
+gulp.task('standards', () => {
   return gulp.src(paths)
-    .pipe(jshint())
-    .pipe(jscs())
-    .on('error', function () {
-      // Suppress jscs errors, they're rolled into the jshint reporter, below.
-    })
-    .pipe(jscsStylish.combineWithHintResults())
-    .pipe(jshint.reporter(jshintStylish))
-    .pipe(jshint.reporter('fail'));
+    .pipe(eslint())
+    .pipe(eslint.format())
+    .pipe(eslint.failAfterError());
 });
 
 gulp.task('watch', ['test'], function () {

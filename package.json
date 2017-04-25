@@ -1,6 +1,6 @@
 {
   "name": "harmony",
-  "version": "0.2.1",
+  "version": "1.0.0",
   "repository": "http://github.com/Drarok/harmony.git",
   "description": "A data brokering HTTP server, written in Node.js.",
   "main": "harmony.js",
@@ -10,18 +10,15 @@
   "author": "Mat Gadd <source@catchall.drarok.com>",
   "license": "ISC",
   "dependencies": {
-    "csv-parse": "0.1.x",
-    "mssql": "0.5.x",
-    "mysql": "2.1.x",
-    "pg": "2.11.x",
-    "sqlite3": "3.0.x"
+    "csv-parse": "~1.2.0",
+    "mssql": "~4.0.2",
+    "mysql": "~2.13.x",
+    "pg": "~6.1.5",
+    "sqlite3": "~3.1.8"
   },
   "devDependencies": {
-    "gulp": "3.9.x",
-    "gulp-jasmine": "2.1.x",
-    "gulp-jscs": "3.0.x",
-    "gulp-jscs-stylish": "1.2.x",
-    "gulp-jshint": "1.11.x",
-    "jshint-stylish": "2.0.x"
+    "gulp": "~3.9.1",
+    "gulp-jasmine": "~2.4.2",
+    "gulp-eslint": "~3.0.1"
   }
 }

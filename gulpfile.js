@@ -9,10 +9,10 @@ gulp.task('jasmine', () => {
   ];
 
   return gulp.src(tests)
-    .pipe(jasmine())
-    .on('error', function (e) {
-      throw e;
-    });
+    .pipe(jasmine({
+      includeStackTrace: true,
+      verbose: true
+    }));
 });
 
 let paths = [

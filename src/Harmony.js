@@ -34,12 +34,9 @@ Harmony.prototype.handleRequest = function (req, res) {
 };
 
 Harmony.prototype.dispatch = function (res, collection, object, query) {
-  let promises = [];
-
-  for (let name of collection.objects[object]) {
-    var server = collection.servers[name];
-    promises.push(new Promise(resolve => {
-      server.getTable(object, query, (err, rows) => {
+  let promises = collection.objects[object].map(name => {
+    return new Promise(resolve => {
+      collection.servers[name].getTable(object, query, (err, rows) => {
         let result = { server: name };
 
         if (err) {
@@ -50,8 +47,8 @@ Harmony.prototype.dispatch = function (res, collection, object, query) {
 
         resolve(result);
       });
-    }));
-  }
+    });
+  });
 
   Promise.all(promises)
     .then(results => {
@@ -135,7 +132,7 @@ Harmony.prototype.createCollections = function (configPath) {
       collection.servers[s] = factory(
         server.type, server.hostname, server.username,
         server.password, server.options
-        );
+      );
     }
   }
 

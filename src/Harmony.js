@@ -55,6 +55,12 @@ Harmony.prototype.dispatch = function (res, collection, object, query) {
       let hasError = results.some(result => result.error);
       res.writeHead(hasError ? 500 : 200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify(results, null, '  '));
+    })
+    .catch(err => {
+      console.error(err, err.stack);
+
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end();
     });
 };
 

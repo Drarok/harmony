@@ -53,7 +53,6 @@ Harmony.prototype.dispatch = function (res, collection, object, query) {
     results.push(result);
 
     if (expected == ++actual) {
-      console.log('Finished!!!');
       res.writeHead(error ? 500 : 200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify(results, null, '  '));
     }

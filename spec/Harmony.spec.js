@@ -1,7 +1,7 @@
 var fs = require('fs');
 var http = require('./helpers/http');
 
-describe('Harmony', function () {
+describe('Harmony', () => {
   var Harmony = require('../src/Harmony');
 
   beforeAll(function (done) {
@@ -9,49 +9,49 @@ describe('Harmony', function () {
 
     var asset = fs.createReadStream(__dirname + '/assets/harmony.sqlite3');
     asset.pipe(fs.createWriteStream('/tmp/harmony.sqlite3'));
-    asset.on('end', function () {
+    asset.on('end', () => {
       console.log('Copy complete');
       done();
     });
   });
 
-  describe('constructor', function () {
-    it('should fail if config does not exist', function () {
-      var error = function () {
+  describe('constructor', () => {
+    it('should fail if config does not exist', () => {
+      var error = () => {
         new Harmony('./no/such/path');
       };
 
-      expect(error).toThrowError(Error, 'ENOENT, no such file or directory \'./no/such/path\'');
+      expect(error).toThrowError(Error, /^ENOENT/);
     });
 
-    it('should fail if config isn\'t JSON', function () {
-      var error = function () {
+    it('should fail if config isn\'t JSON', () => {
+      var error = () => {
         new Harmony(__dirname + '/assets/collections_invalid.json');
       };
 
       expect(error).toThrowError(Error, 'Config file is not valid JSON.');
     });
 
-    it('should fail if config is invalid', function () {
-      var error = function () {
+    it('should fail if config is invalid', () => {
+      var error = () => {
         new Harmony(__dirname + '/assets/collections_missing_server.json');
       };
 
       expect(error).toThrowError(Error, 'No such server \'mysql\' in collection \'collection\', object \'table\'.');
     });
 
-    it('should succeed given a valid config', function () {
+    it('should succeed given a valid config', () => {
       var harmony = new Harmony(__dirname + '/assets/collections_valid.json');
 
       expect(Object.keys(harmony.collections)).toEqual(['collection1', 'collection2']);
     });
   });
 
-  describe('handleRequest', function () {
+  describe('handleRequest', () => {
     var harmony;
     var res;
 
-    beforeEach(function () {
+    beforeEach(() => {
       harmony = new Harmony(__dirname + '/assets/collections_valid.json');
       spyOn(harmony, 'dispatch');
       expect(harmony.dispatch).not.toHaveBeenCalled();
@@ -59,11 +59,11 @@ describe('Harmony', function () {
       res = http.response();
     });
 
-    afterEach(function () {
+    afterEach(() => {
       expect(res.headers && res.headers['Content-Type']).toEqual('application/json');
     });
 
-    it('should output all collections', function () {
+    it('should output all collections', () => {
       var req = http.request('/_all_collections');
       harmony.handleRequest(req, res);
 
@@ -71,7 +71,7 @@ describe('Harmony', function () {
       expect(res.body).toEqual(JSON.stringify(['collection1', 'collection2']));
     });
 
-    it('should error when collection does not exist', function () {
+    it('should error when collection does not exist', () => {
       var req = http.request('/invalid_collection');
       harmony.handleRequest(req, res);
 
@@ -82,7 +82,7 @@ describe('Harmony', function () {
       }));
     });
 
-    it('should output all objects for a collection', function () {
+    it('should output all objects for a collection', () => {
       var req = http.request('/collection1/_all_objects');
       harmony.handleRequest(req, res);
 
@@ -94,7 +94,7 @@ describe('Harmony', function () {
       ]));
     });
 
-    it('should error when object does not exist', function () {
+    it('should error when object does not exist', () => {
       var req = http.request('/collection1/invalid_object');
       harmony.handleRequest(req, res);
 
@@ -105,12 +105,9 @@ describe('Harmony', function () {
       }));
     });
 
-    fdescribe('dispatch', function () {
+    describe('dispatch', () => {
       it('should return data', function (done) {
-        harmony.dispatch.and.callThrough();
-        expect(harmony.dispatch).toHaveBeenCalled();
-
-        res.on('end', function () {
+        res.on('end', () => {
           var data = [
             {
               server: 'sqlite',
@@ -132,9 +129,12 @@ describe('Harmony', function () {
           done();
         });
 
+        harmony.dispatch.and.callThrough();
+
         var req = http.request('/collection1/table3');
         harmony.handleRequest(req, res);
-        console.log('res', res);
+
+        expect(harmony.dispatch).toHaveBeenCalled();
       });
     });
   });

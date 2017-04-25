@@ -1,6 +1,6 @@
 class Server {
   static factory(type, hostname, username, password, options) {
-    var ServerObject = require('./Server/' + type);
+    const ServerObject = require('./Server/' + type);
     return new ServerObject(hostname, username, password, options);
   }
 
@@ -21,18 +21,16 @@ class Server {
   }
 
   getTable(name, query, callback) {
-    var _this = this;
-
     if (!this.isConnected()) {
-      this.connect(function (err) {
+      this.connect(err => {
         if (err) {
           throw err;
         }
 
-        _this._getTable(name, query, callback);
+        this._getTable(name, query, callback);
       });
     } else {
-      _this._getTable(name, query, callback);
+      this._getTable(name, query, callback);
     }
   }
 
@@ -42,16 +40,16 @@ class Server {
   }
 
   parseQuery(query) {
-    var where = [];
+    let where = [];
 
-    for (var column in query) {
+    for (let column in query) {
       // Ignore option keys.
       if (column.substr(0, 1) == '_') {
         continue;
       }
 
-      var value = query[column];
-      var clause = this.escapeIdentifier(column);
+      let value = query[column];
+      let clause = this.escapeIdentifier(column);
       if (value.indexOf('~') !== 0) {
         clause += ' = ';
         clause += this.escapeValue(value.replace(/^\\~/, '~'));
@@ -66,10 +64,10 @@ class Server {
   }
 
   parseSort(sort) {
-    var sortMatches = sort.match(/([^\[\]]+)(?:\[(asc|desc)\])?/);
+    let sortMatches = sort.match(/([^\[\]]+)(?:\[(asc|desc)\])?/);
 
-    var column = sortMatches[1];
-    var direction = 'ASC';
+    let column = sortMatches[1];
+    let direction = 'ASC';
 
     if (sortMatches[2]) {
       direction = sortMatches[2].toUpperCase() == 'DESC' ? 'DESC' : 'ASC';

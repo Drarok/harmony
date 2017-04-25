@@ -18,10 +18,10 @@ if (cluster.isMaster) {
 
   const Harmony = require('./src/Harmony');
 
-  var harmonyInstance = new Harmony(__dirname + '/config/collections.json');
+  let harmonyInstance = new Harmony(__dirname + '/config/collections.json');
 
   // This function is required to ensure 'this' is valid in the instance.
-  var server = http.createServer(function (req, res) {
+  let server = http.createServer(function (req, res) {
     harmonyInstance.handleRequest(req, res);
   });
 

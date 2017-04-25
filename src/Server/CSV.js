@@ -1,3 +1,5 @@
+const fs = require('fs');
+
 const parse = require('csv-parse');
 
 const Server = require('../Server.js');
@@ -12,8 +14,8 @@ class CSV extends Server {
       return callback('No such table: ' + name);
     }
 
-    var queryColumns = [];
-    for (var column in query) {
+    let queryColumns = [];
+    for (let column in query) {
       if (column[0] == '_') {
         continue;
       }
@@ -21,12 +23,12 @@ class CSV extends Server {
       queryColumns.push(column);
     }
 
-    var where = this.parseQuery(query);
+    let where = this.parseQuery(query);
 
-    var columns;
-    var data = [];
+    let columns;
+    let data = [];
 
-    var input = require('fs').createReadStream(this.options.paths[name]);
+    let input = fs.createReadStream(this.options.paths[name]);
 
     input
     .pipe(parse({ delimiter: this.options.delimiter || ',' }))
@@ -50,7 +52,7 @@ class CSV extends Server {
         return;
       }
 
-      var keyedRow = {};
+      let keyedRow = {};
 
       row.forEach(function (value, index) {
         keyedRow[columns[index]] = value;
@@ -68,7 +70,7 @@ class CSV extends Server {
       }
 
       if (query._sort) {
-        var sort = this.parseSort(query._sort);
+        let sort = this.parseSort(query._sort);
         if (sort.direction === 'DESC') {
           sort.direction = [1, -1];
         } else {
@@ -99,21 +101,21 @@ class CSV extends Server {
     }
 
     return function (row) {
-      var match = true;
+      let match = true;
 
-      for (var column in query) {
+      for (let column in query) {
         // Ignore option keys.
         if (column.substr(0, 1) == '_') {
           continue;
         }
 
-        var value = query[column];
+        let value = query[column];
         if (value.indexOf('~') !== 0) {
           match = row[column] == value.replace(/^\\~/, '~');
         } else {
-          var clean = value.substr(1).replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&');
+          let clean = value.substr(1).replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&');
           clean = clean.replace(/%/g, '.*');
-          var regexp = new RegExp('^' + clean + '$', 'i');
+          let regexp = new RegExp('^' + clean + '$', 'i');
           match = Boolean(row[column].match(regexp));
         }
 

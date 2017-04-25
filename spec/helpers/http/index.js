@@ -1,5 +1,5 @@
-var Request = require('./request');
-var Response = require('./response');
+const Request = require('./request');
+const Response = require('./response');
 
 module.exports = {
   request: function (options) {

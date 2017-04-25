@@ -1,33 +1,12 @@
-var fs = require('fs');
-var http = require('./helpers/http');
+const fs = require('fs');
+const http = require('./helpers/http');
 
-describe('Node', () => {
-  it('should support Promise.all()', (done) => {
-    let factory = () => {
-      return new Promise((resolve) => {
-        setTimeout(() => resolve(true), Math.floor(50 + Math.random() * 50));
-      });
-    };
-
-    Promise.all([
-      factory(),
-      factory(),
-      factory()
-    ])
-    .then(promises => {
-      promises.forEach(p => {
-        expect(p).toBe(true);
-      });
-      done();
-    });
-  });
-});
+const Harmony = require('../src/Harmony');
 
 describe('Harmony', () => {
-  var Harmony = require('../src/Harmony');
 
   beforeAll(function (done) {
-    var asset = fs.createReadStream(__dirname + '/assets/harmony.sqlite3');
+    let asset = fs.createReadStream(__dirname + '/assets/harmony.sqlite3');
     asset.pipe(fs.createWriteStream('/tmp/harmony.sqlite3'));
     asset.on('end', () => {
       done();
@@ -36,7 +15,7 @@ describe('Harmony', () => {
 
   describe('constructor', () => {
     it('should fail if config does not exist', () => {
-      var error = () => {
+      let error = () => {
         new Harmony('./no/such/path');
       };
 
@@ -44,7 +23,7 @@ describe('Harmony', () => {
     });
 
     it('should fail if config isn\'t JSON', () => {
-      var error = () => {
+      let error = () => {
         new Harmony(__dirname + '/assets/collections_invalid.json');
       };
 
@@ -52,7 +31,7 @@ describe('Harmony', () => {
     });
 
     it('should fail if config is invalid', () => {
-      var error = () => {
+      let error = () => {
         new Harmony(__dirname + '/assets/collections_missing_server.json');
       };
 
@@ -60,15 +39,15 @@ describe('Harmony', () => {
     });
 
     it('should succeed given a valid config', () => {
-      var harmony = new Harmony(__dirname + '/assets/collections_valid.json');
+      let harmony = new Harmony(__dirname + '/assets/collections_valid.json');
 
       expect(Object.keys(harmony.collections)).toEqual(['collection1', 'collection2']);
     });
   });
 
   describe('handleRequest', () => {
-    var harmony;
-    var res;
+    let harmony;
+    let res;
 
     beforeEach(() => {
       harmony = new Harmony(__dirname + '/assets/collections_valid.json');
@@ -83,7 +62,7 @@ describe('Harmony', () => {
     });
 
     it('should output all collections', () => {
-      var req = http.request('/_all_collections');
+      let req = http.request('/_all_collections');
       harmony.handleRequest(req, res);
 
       expect(res.statusCode).toBe(200);
@@ -91,7 +70,7 @@ describe('Harmony', () => {
     });
 
     it('should error when collection does not exist', () => {
-      var req = http.request('/invalid_collection');
+      let req = http.request('/invalid_collection');
       harmony.handleRequest(req, res);
 
       expect(res.statusCode).toBe(404);
@@ -102,7 +81,7 @@ describe('Harmony', () => {
     });
 
     it('should output all objects for a collection', () => {
-      var req = http.request('/collection1/_all_objects');
+      let req = http.request('/collection1/_all_objects');
       harmony.handleRequest(req, res);
 
       expect(res.statusCode).toBe(200);
@@ -114,7 +93,7 @@ describe('Harmony', () => {
     });
 
     it('should error when object does not exist', () => {
-      var req = http.request('/collection1/invalid_object');
+      let req = http.request('/collection1/invalid_object');
       harmony.handleRequest(req, res);
 
       expect(res.statusCode).toBe(404);
@@ -127,7 +106,7 @@ describe('Harmony', () => {
     describe('dispatch', () => {
       it('should return data', function (done) {
         res.on('end', () => {
-          var data = [
+          let data = [
             {
               server: 'sqlite',
               rows: [
@@ -150,7 +129,7 @@ describe('Harmony', () => {
 
         harmony.dispatch.and.callThrough();
 
-        var req = http.request('/collection1/table3');
+        let req = http.request('/collection1/table3');
         harmony.handleRequest(req, res);
 
         expect(harmony.dispatch).toHaveBeenCalled();

@@ -34,44 +34,31 @@ Harmony.prototype.handleRequest = function (req, res) {
 };
 
 Harmony.prototype.dispatch = function (res, collection, object, query) {
-  var expected = 0;
-  var actual = 0;
+  let promises = [];
 
-  var error = false;
-  var results = [];
-
-  var callback = function (name, err, rows) {
-    var result = { server: name };
-
-    if (err) {
-      error = true;
-      result.error = err;
-    } else {
-      result.rows = rows;
-    }
-
-    results.push(result);
-
-    if (expected == ++actual) {
-      res.writeHead(error ? 500 : 200, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify(results, null, '  '));
-    }
-  };
-
-  var callbackMaker = function (name, callback) {
-    return function (err, rows) {
-      callback(name, err, rows);
-    };
-  };
-
-  var serverNames = collection.objects[object];
-
-  for (var i in serverNames) {
-    ++expected;
-    var name = serverNames[i];
+  for (let name of collection.objects[object]) {
     var server = collection.servers[name];
-    server.getTable(object, query, callbackMaker(name, callback));
+    promises.push(new Promise(resolve => {
+      server.getTable(object, query, (err, rows) => {
+        let result = { server: name };
+
+        if (err) {
+          result.error = err;
+        } else {
+          result.rows = rows;
+        }
+
+        resolve(result);
+      });
+    }));
   }
+
+  Promise.all(promises)
+    .then(results => {
+      let hasError = results.some(result => result.error);
+      res.writeHead(hasError ? 500 : 200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify(results, null, '  '));
+    });
 };
 
 Harmony.prototype.writeAllCollections = function (res) {

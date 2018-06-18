@@ -1,12 +1,29 @@
-var http = require('http');
+const cluster = require('cluster');
 
-var Harmony = require('./src/Harmony');
-var harmonyInstance = new Harmony(__dirname + '/config/collections.json');
+const HOST = process.env.HOST || '127.0.0.1';
+const PORT = process.env.PORT || 8008;
 
-// This function is required to ensure 'this' is valid in the instance.
-var server = http.createServer(function (req, res) {
+if (cluster.isMaster) {
+  let cpuCount = require('os').cpus().length;
+
+  console.log(`Starting Harmony server cluster (${cpuCount})`);
+
+  for (let i = 0; i < cpuCount; ++i) {
+    cluster.fork();
+  }
+
+  console.log(`Harmony running on http://${HOST}:${PORT}/`);
+} else {
+  const http = require('http');
+
+  const Harmony = require('./src/Harmony');
+
+  let harmonyInstance = new Harmony(__dirname + '/config/collections.json');
+
+  // This function is required to ensure 'this' is valid in the instance.
+  let server = http.createServer(function (req, res) {
     harmonyInstance.handleRequest(req, res);
-});
+  });
 
-server.listen(8008, '127.0.0.1');
-console.log('HTTP server running on http://127.0.0.1:8008');
+  server.listen(PORT, HOST);
+}

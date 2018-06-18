@@ -1,4 +1,4 @@
-# Harmony
+# Harmony [![Build Status](https://travis-ci.org/Drarok/harmony.svg?branch=develop)](https://travis-ci.org/Drarok/harmony)
 
 A data brokering HTTP server, written in Node.js.
 
